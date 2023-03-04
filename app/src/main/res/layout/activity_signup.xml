@@ -35,7 +35,7 @@
         android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/usernamebox"
+        android:id="@+id/emailbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/createacctext"
@@ -56,7 +56,7 @@
         android:id="@+id/passwordbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/usernamebox"
+        android:layout_below="@+id/emailbox"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
@@ -75,10 +75,13 @@
         android:id="@+id/signupbutton"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:backgroundTint="#A980FF00"
         android:layout_below="@+id/passwordbox"
         android:layout_centerHorizontal="true"
-        android:layout_margin="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="50dp"
+        android:backgroundTint="#A980FF00"
         android:text="@string/sign_up_button"
         android:textColor="@color/black"
         android:textSize="16sp"
