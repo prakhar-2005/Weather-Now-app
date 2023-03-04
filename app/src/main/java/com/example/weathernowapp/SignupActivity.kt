@@ -5,16 +5,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 
-class MainActivity : AppCompatActivity() {
+class SignupActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_signup)
 
-        val signuptext: TextView = findViewById(R.id.signuptext)
+        val logintext: TextView = findViewById(R.id.logintxt)
 
-        signuptext.setOnClickListener{
-            val intent = Intent(this, SignupActivity::class.java)
+        logintext.setOnClickListener{
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
     }
 }
