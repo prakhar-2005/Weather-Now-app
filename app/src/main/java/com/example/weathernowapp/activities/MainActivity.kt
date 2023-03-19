@@ -1,9 +1,8 @@
-package com.example.weathernowapp
+package com.example.weathernowapp.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
 import android.widget.Toast
 import com.example.weathernowapp.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -51,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         if (firebaseAuth.currentUser != null){
             val intent = Intent(this, MainActivity2::class.java)
             startActivity(intent)
+            finish()
         }
     }
 }

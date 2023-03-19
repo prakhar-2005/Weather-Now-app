@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/loginbackground_4"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
 
     <!--
@@ -24,10 +24,7 @@
         android:id="@+id/logintext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="50dp"
+        android:layout_margin="50dp"
         android:gravity="center_horizontal"
         android:text="@string/login"
         android:textColor="@color/white"
@@ -70,6 +67,7 @@
         android:textColor="#FFFFFF"
         android:textColorHint="#7EFFFFFF"
         android:longClickable="false"
+        app:passwordToggleDrawable="@drawable/baseline_remove_red_eye_24"
         app:passwordToggleEnabled="true"/>
 
     <com.google.android.material.button.MaterialButton
@@ -78,10 +76,7 @@
         android:layout_height="60dp"
         android:layout_below="@+id/passwordbox"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="50dp"
+        android:layout_margin="50dp"
         android:backgroundTint="#A980FF00"
         android:text="@string/loginbutton"
         android:textColor="@color/black"
