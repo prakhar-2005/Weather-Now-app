@@ -1,5 +1,6 @@
 package com.example.weathernowapp.utilities
 
+import com.example.weathernowapp.forecastModels.ForecastModel
 import com.example.weathernowapp.models.WeatherModel
 import retrofit2.Call
 import retrofit2.http.GET
@@ -19,4 +20,5 @@ interface ApiInterface {
         @Query("q") q:String,
         @Query("APPID") appid:String
     ):Call<WeatherModel>
+
 }

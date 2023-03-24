@@ -13,5 +13,6 @@
     <string name="signup">Signup</string>
     <string name="logintxt">Login</string>
     <string name="email">Email</string>
-    <string name="search_city">Search city</string>
+    <string name="searchtext">Search city or country</string>
+    <string name="logout">Logout</string>
 </resources>

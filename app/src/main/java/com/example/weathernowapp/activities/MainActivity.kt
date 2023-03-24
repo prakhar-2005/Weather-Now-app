@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         binding.signuptext.setOnClickListener{
             val intent = Intent(this, SignupActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         binding.loginbutton.setOnClickListener{
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
                     if (it.isSuccessful) {
                         val intent = Intent(this, MainActivity2::class.java)
                         startActivity(intent)
+                        finish()
                     } else {
                         Toast.makeText(this, "Credentials are wrong or user doesn't exist", Toast.LENGTH_SHORT).show()
                     }
@@ -41,16 +43,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Empty Fields are not allowed", Toast.LENGTH_SHORT).show()
             }
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        if (firebaseAuth.currentUser != null){
-            val intent = Intent(this, MainActivity2::class.java)
-            startActivity(intent)
-            finish()
         }
     }
 }

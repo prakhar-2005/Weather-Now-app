@@ -1,33 +1,43 @@
 package com.example.weathernowapp.activities
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.example.weathernowapp.models.WeatherModel
 import com.example.weathernowapp.R
 import com.example.weathernowapp.utilities.ApiUtilities
 import com.example.weathernowapp.databinding.ActivityMain2Binding
+import com.example.weathernowapp.models.WeatherModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Call
 import retrofit2.Response
 import java.math.RoundingMode
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
 import java.util.*
 import kotlin.math.roundToInt
 
 class MainActivity2 : AppCompatActivity() {
+
+    private lateinit var firebaseAuth: FirebaseAuth
 
     lateinit var binding:ActivityMain2Binding
 
@@ -38,6 +48,32 @@ class MainActivity2 : AppCompatActivity() {
     private val LOCATION_REQUEST_CODE=101
 
     private val apiKey="7df093c596143ab7b6dd15e0be85bee0"
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+
+        menuInflater.inflate(R.menu.main_menu, menu)
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        firebaseAuth = FirebaseAuth.getInstance()
+
+        if (item.itemId == R.id.logout){
+
+            firebaseAuth.signOut()
+
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+
+            Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
+        }
+
+        return true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +124,7 @@ class MainActivity2 : AppCompatActivity() {
 
         ApiUtilities.getApiInterface()?.getCityWeatherData(city, apiKey)
             ?.enqueue(object :retrofit2.Callback<WeatherModel>{
+                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onResponse(
                     call: Call<WeatherModel>,
                     response: Response<WeatherModel>
@@ -114,13 +151,14 @@ class MainActivity2 : AppCompatActivity() {
 
                 }
             }
-        )
+            )
     }
 
     private fun fetchCurrentLocationWeather(latitude:String, longitude:String){
 
         ApiUtilities.getApiInterface()?.getCurrentWeatherData(latitude,longitude,apiKey)
             ?.enqueue(object :retrofit2.Callback<WeatherModel>{
+                @RequiresApi(Build.VERSION_CODES.O)
                 override fun onResponse(
                     call: Call<WeatherModel>,
                     response: Response<WeatherModel>
@@ -181,6 +219,7 @@ class MainActivity2 : AppCompatActivity() {
                                 location.latitude.toString(),
                                 location.longitude.toString()
                             )
+
                         }
                     }
             }
@@ -249,25 +288,24 @@ class MainActivity2 : AppCompatActivity() {
 
             }
 
-            else{
-
-            }
         }
     }
 
-    private fun  setData(body:WeatherModel){
+    @SuppressLint("SimpleDateFormat", "SetTextI18n")
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setData(body:WeatherModel){
 
         binding.apply {
 
-            val currentDate = SimpleDateFormat("dd/MM/yyyy hh:mm").format(Date())
+            val currentDate = SimpleDateFormat("dd/MM/yyyy  hh:mm").format(Date())
 
-            time.text=currentDate.toString()
+            time.text = currentDate.toString()
 
-            maxtemp.text = "Max " + k2c(body?.main?.temp_max!!) + "°"
+            maxtemp.text = "Max " + k2c(body.main.temp_max) + "°"
 
-            mintemp.text = "Min " + k2c(body?.main?.temp_min!!) + "°"
+            mintemp.text = "Min " + k2c(body.main.temp_min) + "°"
 
-            temp.text = "" + k2c(body?.main?.temp!!) + "°"
+            temp.text = "" + k2c(body.main.temp) + "°"
 
             weathertitle.text = body.weather[0].main
 
@@ -280,16 +318,43 @@ class MainActivity2 : AppCompatActivity() {
 
             searchcity.setText(body.name)
 
-            feelslike.text = "Feels like " + k2c(body?.main?.feels_like!!) + "°"
+            feelslike.text = "Feels like " + k2c(body.main.feels_like) + "°"
 
             windtext.text = body.wind.speed.toString() + " m/s"
+
+            sunrisetext.text = utcToLocaltime(body.sys.sunrise.toLong())
+
+            sunsettext.text = utcToLocaltime(body.sys.sunset.toLong())
+
+            sealeveltext.text = body.main.sea_level.toString() + " mbar"
+
+            groundleveltext.text = body.main.grnd_level.toString() + " mbar"
+
+            cloudinesstext.text = body.clouds.all.toString() + "%"
+
+            gusttext.text = body.wind.gust.toString() + " m/s"
+
+            winddirectiontext.text = body.wind.deg.toString() + "°"
+
         }
 
         updateUI(body.weather[0].id)
     }
 
-    private fun updateUI(id: Int) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun utcToLocaltime(utc: Long): String {
 
+        val localTime = utc.let {
+
+            Instant.ofEpochSecond(it)
+                .atZone(ZoneId.systemDefault())
+                .toLocalTime()
+        }
+
+        return localTime.toString()
+    }
+
+    private fun updateUI(id: Int) {
 
         binding.apply {
 
