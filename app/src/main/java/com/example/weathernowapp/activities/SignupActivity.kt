@@ -24,7 +24,6 @@ class SignupActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             binding.signupprogressbar.visibility = View.VISIBLE
             startActivity(intent)
-            finish()
         }
         binding.signupbutton.setOnClickListener {
             val email = binding.emailbox.text.toString()

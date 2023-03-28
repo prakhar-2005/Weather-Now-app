@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/aqi_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:background="#B3000000">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/air_quality_index"
+            android:paddingStart="25dp"
+            android:paddingTop="25dp"
+            android:textColor="@color/white"
+            android:textSize="35sp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/aqivalue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="155"
+            android:paddingTop="40dp"
+            android:paddingStart="20dp"
+            android:textColor="@color/white"
+            android:textSize="70sp">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/aqi_legend"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:textColor="@color/white"
+            android:textSize="15sp">
+
+        </TextView>
+
+        <LinearLayout
+            android:layout_marginTop="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="6"
+            android:padding="10dp"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/so2value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="15"
+                    android:textSize="30sp"
+                    android:gravity="center"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SO2"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/no2value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="15"
+                    android:textSize="30sp"
+                    android:gravity="center"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="NO2"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/pm10value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="15"
+                    android:textSize="30sp"
+                    android:gravity="center"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="PM10"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/pm2.5value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="15"
+                    android:textSize="30sp"
+                    android:gravity="center"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="PM2.5"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/o3value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="15"
+                    android:textSize="30sp"
+                    android:gravity="center"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="O3"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/covalue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="15"
+                    android:textSize="30sp"
+                    android:gravity="center"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="CO"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/aqiprogressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+        </ProgressBar>
+
+    </LinearLayout>
+
+</LinearLayout>
+

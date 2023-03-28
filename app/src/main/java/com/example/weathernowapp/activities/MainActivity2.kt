@@ -9,6 +9,7 @@ import android.location.LocationManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log.e
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,9 +21,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.example.weathernowapp.R
+import com.example.weathernowapp.airpollution2.AirModel
 import com.example.weathernowapp.utilities.ApiUtilities
 import com.example.weathernowapp.databinding.ActivityMain2Binding
 import com.example.weathernowapp.models.WeatherModel
+import com.example.weathernowapp.utilities.AirUtilities
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
@@ -84,6 +87,11 @@ class MainActivity2 : AppCompatActivity() {
         fusedLocationProvider = LocationServices.getFusedLocationProviderClient(this)
 
         getCurrentLocation()
+
+        binding.aqibutton.setOnClickListener{
+
+            startActivity(Intent(this, AqiActivity::class.java))
+        }
 
         binding.searchcity.setOnEditorActionListener { textView, i, keyEvent ->
 
@@ -187,6 +195,38 @@ class MainActivity2 : AppCompatActivity() {
             })
     }
 
+    private fun fetchCurrentAqi(latitude:String, longitude:String){
+
+        AirUtilities.getAirInterface()?.getAirPollutionData(latitude,longitude,apiKey)
+            ?.enqueue(object :retrofit2.Callback<AirModel>{
+                @RequiresApi(Build.VERSION_CODES.O)
+                override fun onResponse(call: Call<AirModel>, response: Response<AirModel>) {
+
+                    if (response.isSuccessful){
+
+                        binding.progressbar.visibility = View.GONE
+
+                        response.body()?.let {
+                            e("body","$it")
+                            setAirData(it)
+                        }
+                        if(response.body()==null) e("null","null body")
+                    }
+
+                    else{
+
+                        Toast.makeText(this@MainActivity2, "No AQI data found", Toast.LENGTH_SHORT).show()
+
+                        binding.progressbar.visibility = View.GONE
+                    }
+                }
+
+                override fun onFailure(call: Call<AirModel>, t: Throwable) {
+                        e("fail",t.message.toString())
+                }
+            })
+    }
+
     private fun getCurrentLocation(){
 
         if (checkPermissions()){
@@ -216,6 +256,11 @@ class MainActivity2 : AppCompatActivity() {
                             binding.progressbar.visibility = View.VISIBLE
 
                             fetchCurrentLocationWeather(
+                                location.latitude.toString(),
+                                location.longitude.toString()
+                            )
+
+                            fetchCurrentAqi(
                                 location.latitude.toString(),
                                 location.longitude.toString()
                             )
@@ -322,9 +367,9 @@ class MainActivity2 : AppCompatActivity() {
 
             windtext.text = body.wind.speed.toString() + " m/s"
 
-            sunrisetext.text = utcToLocaltime(body.sys.sunrise.toLong())
+            sunrisetext.text = utcToLocalTime(body.sys.sunrise.toLong())
 
-            sunsettext.text = utcToLocaltime(body.sys.sunset.toLong())
+            sunsettext.text = utcToLocalTime(body.sys.sunset.toLong())
 
             sealeveltext.text = body.main.sea_level.toString() + " mbar"
 
@@ -341,8 +386,18 @@ class MainActivity2 : AppCompatActivity() {
         updateUI(body.weather[0].id)
     }
 
+    private fun setAirData(body: AirModel){
+
+        binding.apply {
+
+            aqibutton.text = "AQI: " + body.list[0].main.aqi.toString()
+
+            e("body","$body")
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun utcToLocaltime(utc: Long): String {
+    private fun utcToLocalTime(utc: Long): String {
 
         val localTime = utc.let {
 

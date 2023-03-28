@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity() {
         binding.signuptext.setOnClickListener{
             val intent = Intent(this, SignupActivity::class.java)
             startActivity(intent)
-            finish()
         }
 
         binding.loginbutton.setOnClickListener{
