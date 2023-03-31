@@ -21,14 +21,20 @@ class SignupActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         binding.logintxt.setOnClickListener {
+
+            binding.progressbarsignup.visibility = View.VISIBLE
+
             val intent = Intent(this, MainActivity::class.java)
-            binding.signupprogressbar.visibility = View.VISIBLE
             startActivity(intent)
+            finish()
         }
+
         binding.signupbutton.setOnClickListener {
+
+            binding.progressbarsignup.visibility = View.VISIBLE
+
             val email = binding.emailbox.text.toString()
             val pass = binding.passwordbox.text.toString()
-            binding.signupprogressbar.visibility = View.VISIBLE
 
             if (email.isNotEmpty() && pass.isNotEmpty()) {
 
@@ -37,17 +43,20 @@ class SignupActivity : AppCompatActivity() {
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                         finish()
+
+                        binding.progressbarsignup.visibility = View.GONE
+
                     } else {
                         Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
+
+                        binding.progressbarsignup.visibility = View.GONE
                     }
                 }
 
-                binding.signupprogressbar.visibility = View.GONE
-
-
             } else {
                 Toast.makeText(this, "Empty Fields are not allowed", Toast.LENGTH_SHORT).show()
-                binding.signupprogressbar.visibility = View.GONE
+
+                binding.progressbarsignup.visibility = View.GONE
             }
         }
     }

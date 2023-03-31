@@ -3,12 +3,12 @@
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/loginbackground_4">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/loginbackground_4"
         tools:context=".activities.MainActivity">
 
         <TextView
@@ -77,12 +77,22 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
+        <ProgressBar
+            android:id="@+id/progressbarlogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/loginbutton"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone" />
+
         <LinearLayout
+            android:id="@+id/donthvacctextlayout"
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
-            android:layout_below="@id/loginbutton"
+            android:layout_below="@id/progressbarlogin"
             android:layout_marginTop="10dp">
 
             <TextView
@@ -103,8 +113,10 @@
                 android:textStyle="bold"
                 android:paddingStart="8dp"/>
 
+
         </LinearLayout>
 
     </RelativeLayout>
+
 
 </ScrollView>

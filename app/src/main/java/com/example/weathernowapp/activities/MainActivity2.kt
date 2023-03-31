@@ -24,8 +24,10 @@ import com.example.weathernowapp.R
 import com.example.weathernowapp.airpollution2.AirModel
 import com.example.weathernowapp.utilities.ApiUtilities
 import com.example.weathernowapp.databinding.ActivityMain2Binding
+import com.example.weathernowapp.geocodemodels.GeocodingModel
 import com.example.weathernowapp.models.WeatherModel
 import com.example.weathernowapp.utilities.AirUtilities
+import com.example.weathernowapp.utilities.GeocodingUtilities
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
@@ -90,7 +92,11 @@ class MainActivity2 : AppCompatActivity() {
 
         binding.aqibutton.setOnClickListener{
 
-            startActivity(Intent(this, AqiActivity::class.java))
+            val intent = Intent(this, AqiActivity::class.java)
+            intent.putExtra("latitude", binding.latitude.text.toString())
+            intent.putExtra("longitude",binding.longitude.text.toString())
+
+            startActivity(intent)
         }
 
         binding.searchcity.setOnEditorActionListener { textView, i, keyEvent ->
@@ -98,6 +104,8 @@ class MainActivity2 : AppCompatActivity() {
             if (i==EditorInfo.IME_ACTION_SEARCH){
 
                 getCityWeather(binding.searchcity.text.toString())
+
+                getCityCoord(binding.searchcity.text.toString())
 
                 val view = this.currentFocus
 
@@ -140,26 +148,70 @@ class MainActivity2 : AppCompatActivity() {
 
                     if (response.isSuccessful){
 
-                        binding.progressbar.visibility = View.GONE
-
                         response.body()?.let {
 
+                            e("body","$it")
                             setData(it)
                         }
+                        if(response.body()==null) e("null","null body")
                     }
+
                     else{
 
                         Toast.makeText(this@MainActivity2, "No city found", Toast.LENGTH_SHORT).show()
 
-                        binding.progressbar.visibility = View.GONE
                     }
+
                 }
 
                 override fun onFailure(call: Call<WeatherModel>, t:Throwable){
-
+                    e("fail",t.message.toString())
                 }
             }
             )
+
+    }
+
+    private fun getCityCoord(city:String){
+
+        GeocodingUtilities.getGeocodingInterface()?.getCoordForCityName(city, apiKey)
+            ?.enqueue(object :retrofit2.Callback<GeocodingModel>{
+                @RequiresApi(Build.VERSION_CODES.O)
+                override fun onResponse(
+                    call: Call<GeocodingModel>,
+                    response: Response<GeocodingModel>
+                ) {
+
+                    if (response.isSuccessful){
+
+                        binding.progressbar.visibility = View.GONE
+
+                        response.body()?.let {
+
+                            e("body","$it")
+                            setGeocodingData(it)
+
+                            fetchCurrentAqi(binding.latitude.text.toString(),binding.longitude.text.toString())
+
+                        }
+                        if(response.body()==null) e("null","null body")
+                    }
+
+                    else{
+
+                        Toast.makeText(this@MainActivity2, "No coordinates found", Toast.LENGTH_SHORT).show()
+
+                        binding.progressbar.visibility = View.GONE
+                    }
+
+                }
+
+                override fun onFailure(call: Call<GeocodingModel>, t: Throwable) {
+                    e("fail", t.message.toString())
+                }
+            }
+            )
+
     }
 
     private fun fetchCurrentLocationWeather(latitude:String, longitude:String){
@@ -178,8 +230,12 @@ class MainActivity2 : AppCompatActivity() {
 
                         response.body()?.let {
 
-                            setData(it)
+                            e("body", "$it")
+                            setData2(it)
+
                         }
+                        if(response.body()==null) e("null","null body")
+
                     }
                     else{
 
@@ -190,12 +246,14 @@ class MainActivity2 : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<WeatherModel>, t:Throwable){
-
+                    e("fail",t.message.toString())
                 }
             })
     }
 
     private fun fetchCurrentAqi(latitude:String, longitude:String){
+
+        binding.progressbar.visibility = View.VISIBLE
 
         AirUtilities.getAirInterface()?.getAirPollutionData(latitude,longitude,apiKey)
             ?.enqueue(object :retrofit2.Callback<AirModel>{
@@ -345,52 +403,89 @@ class MainActivity2 : AppCompatActivity() {
             val currentDate = SimpleDateFormat("dd/MM/yyyy  hh:mm").format(Date())
 
             time.text = currentDate.toString()
-
             maxtemp.text = "Max " + k2c(body.main.temp_max) + "°"
-
             mintemp.text = "Min " + k2c(body.main.temp_min) + "°"
-
             temp.text = "" + k2c(body.main.temp) + "°"
-
             weathertitle.text = body.weather[0].main
-
             pressuretext.text = body.main.pressure.toString() + " mbar"
-
             humiditytext.text = body.main.humidity.toString() + "%"
-
             tempinftext.text = "" + k2c(body.main.temp).times(1.8).plus(32)
                 .roundToInt() + "℉"
-
             searchcity.setText(body.name)
-
             feelslike.text = "Feels like " + k2c(body.main.feels_like) + "°"
-
             windtext.text = body.wind.speed.toString() + " m/s"
-
             sunrisetext.text = utcToLocalTime(body.sys.sunrise.toLong())
-
             sunsettext.text = utcToLocalTime(body.sys.sunset.toLong())
-
             sealeveltext.text = body.main.sea_level.toString() + " mbar"
-
             groundleveltext.text = body.main.grnd_level.toString() + " mbar"
-
             cloudinesstext.text = body.clouds.all.toString() + "%"
-
             gusttext.text = body.wind.gust.toString() + " m/s"
-
             winddirectiontext.text = body.wind.deg.toString() + "°"
+//            latitude.text = body.coord.lat.toString()
+//            longitude.text = body.coord.lon.toString()
+
+            e("body","$body")
 
         }
 
         updateUI(body.weather[0].id)
     }
 
+    @SuppressLint("SimpleDateFormat", "SetTextI18n")
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setData2(body:WeatherModel){
+
+        binding.apply {
+
+            val currentDate = SimpleDateFormat("dd/MM/yyyy  hh:mm").format(Date())
+
+            time.text = currentDate.toString()
+            maxtemp.text = "Max " + k2c(body.main.temp_max) + "°"
+            mintemp.text = "Min " + k2c(body.main.temp_min) + "°"
+            temp.text = "" + k2c(body.main.temp) + "°"
+            weathertitle.text = body.weather[0].main
+            pressuretext.text = body.main.pressure.toString() + " mbar"
+            humiditytext.text = body.main.humidity.toString() + "%"
+            tempinftext.text = "" + k2c(body.main.temp).times(1.8).plus(32)
+                .roundToInt() + "℉"
+            searchcity.setText(body.name)
+            feelslike.text = "Feels like " + k2c(body.main.feels_like) + "°"
+            windtext.text = body.wind.speed.toString() + " m/s"
+            sunrisetext.text = utcToLocalTime(body.sys.sunrise.toLong())
+            sunsettext.text = utcToLocalTime(body.sys.sunset.toLong())
+            sealeveltext.text = body.main.sea_level.toString() + " mbar"
+            groundleveltext.text = body.main.grnd_level.toString() + " mbar"
+            cloudinesstext.text = body.clouds.all.toString() + "%"
+            gusttext.text = body.wind.gust.toString() + " m/s"
+            winddirectiontext.text = body.wind.deg.toString() + "°"
+            latitude.text = body.coord.lat.toString()
+            longitude.text = body.coord.lon.toString()
+
+            e("body","$body")
+
+        }
+
+        updateUI(body.weather[0].id)
+    }
+
+    @SuppressLint("SetTextI18n")
     private fun setAirData(body: AirModel){
 
         binding.apply {
 
             aqibutton.text = "AQI: " + body.list[0].main.aqi.toString()
+
+            e("body","$body")
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setGeocodingData(body: GeocodingModel){
+
+        binding.apply {
+
+            latitude.text = body[0].lat.toString()
+            longitude.text = body[0].lon.toString()
 
             e("body","$body")
         }

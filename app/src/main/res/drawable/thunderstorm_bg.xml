@@ -4,7 +4,7 @@
 
     <gradient
         android:startColor="@color/thunderstorm"
-        android:endColor="#001795"
+        android:endColor="#020933"
         android:angle="45">
 
     </gradient>
