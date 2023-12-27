@@ -1,0 +1,1 @@
+This app is built for users to check the weather at their location using GPS. It also provides the weather details of any place the user searches for, including pressure, humidity, temperature, AQI levels and much more.
